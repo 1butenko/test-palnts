@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GardenHub - Plant Quiz</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-[#a8b89f] min-h-screen overflow-hidden">
+    
+    <div class="flex h-screen">
+        <div class="w-1/2 relative flex items-center justify-center p-12 bg-gradient-to-br from-[#9db291] to-[#a8b89f]">
+            <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-12 max-w-lg relative overflow-hidden">                
+                <div class="text-center mb-6">
+                    <div class="inline-block bg-[#c3dea9] rounded-full p-8 mb-6 shadow-lg transition-all duration-500" id="plantImageContainer">
+                        <div id="plantEmoji" class="text-8xl">🌱</div>
+                    </div>
+                    <h2 class="text-3xl font-bold text-[#2d3e28] mb-3">Do not let your plant die!</h2>
+                    <p class="text-[#6b7565] text-lg leading-relaxed">
+                        Test your gardening expertise! Answer all questions to water your plant. 🌱
+                    </p>
+                </div>
+                <div class="mt-8 bg-[#ebe9e0] rounded-full h-3 overflow-hidden">
+                    <div class="bg-[#4a6741] h-full rounded-full transition-all duration-500" style="width: 0%" id="progressBar"></div>
+                </div>
+                <p class="text-center text-sm text-[#6b7565] mt-3">
+                    <span id="currentQuestion">0</span> of <span id="totalQuestions">10</span> answered
+                </p>
+            </div>
+        </div>
+
+        <div class="w-1/2 bg-[#f5f3ed] overflow-y-auto">
+            <div class="p-12 max-w-2xl mx-auto">
+                
+                <div class="mb-8">
+                    <h1 class="text-4xl font-bold text-[#2d3e28] mb-2">Answer the Questions</h1>
+                    <p class="text-[#6b7565]">Select the best answer for each question below</p>
+                </div>
+
+                <div id="loadingMessage" class="text-center py-12">
+                    <div class="text-[#4a6741] text-xl">Loading questions...</div>
+                </div>
+
+                <div id="errorMessage" class="hidden text-center py-12">
+                    <div class="text-red-600 text-xl mb-4">Failed to load questions</div>
+                    <button onclick="loadQuestions()" class="bg-[#4a6741] hover:bg-[#3e5637] text-white px-6 py-3 rounded-full">
+                        Try Again
+                    </button>
+                </div>
+
+                <div id="quizContainer" class="space-y-8 hidden"></div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let questions = [];
+        let correctAnswers = 0;
+        let totalAnswered = 0;
+        const plantStages = ['🌱', '🌿', '🪴', '🌳', '🌺'];
+
+        async function loadQuestions() {
+            try {
+                document.getElementById('loadingMessage').classList.remove('hidden');
+                document.getElementById('errorMessage').classList.add('hidden');
+                
+                const response = await fetch('http://localhost:4040/get-test');
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const data = await response.json();
+                questions = data.questions || data;
+                
+                document.getElementById('loadingMessage').classList.add('hidden');
+                document.getElementById('quizContainer').classList.remove('hidden');
+                document.getElementById('totalQuestions').textContent = questions.length;
+                
+                renderQuestions();
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                document.getElementById('loadingMessage').classList.add('hidden');
+                document.getElementById('errorMessage').classList.remove('hidden');
+            }
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'bg-white rounded-2xl p-6 shadow-md border border-[#e0ddd3] transition-all hover:shadow-lg';
+                questionDiv.id = `question-${index}`;
+
+                let optionsHtml = '';
+                q.options.forEach((option, optIndex) => {
+                    const optionId = `q${index}_opt${optIndex}`;
+                    optionsHtml += `
+                        <label class="flex items-center p-4 rounded-xl cursor-pointer hover:bg-[#f9f8f5] transition-all border border-transparent hover:border-[#c3dea9] option-label" id="label-${optionId}">
+                            <input type="radio" name="q${index}" value="${optIndex}" class="w-5 h-5 text-[#4a6741] focus:ring-[#6b8561]" id="${optionId}" onchange="checkAnswer(${index}, ${optIndex})">
+                            <span class="ml-3 text-[#2d3e28]">${option}</span>
+                        </label>
+                    `;
+                });
+
+                questionDiv.innerHTML = `
+                    <h3 class="text-lg font-semibold text-[#2d3e28] mb-4">${index + 1}. ${q.question}</h3>
+                    <div class="space-y-3">
+                        ${optionsHtml}
+                    </div>
+                `;
+
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(questionIndex, selectedOption) {
+            const question = questions[questionIndex];
+            const isCorrect = selectedOption === question.correctAnswer;
+            
+            const allInputs = document.querySelectorAll(`input[name="q${questionIndex}"]`);
+            allInputs.forEach(input => {
+                input.disabled = true;
+                const label = document.getElementById(`label-${input.id}`);
+                label.classList.remove('cursor-pointer', 'hover:bg-[#f9f8f5]', 'hover:border-[#c3dea9]');
+            });
+
+            const selectedInput = document.getElementById(`q${questionIndex}_opt${selectedOption}`);
+            const selectedLabel = document.getElementById(`label-q${questionIndex}_opt${selectedOption}`);
+            
+            if (isCorrect) {
+                selectedLabel.classList.add('bg-green-100', 'border-green-500');
+                selectedLabel.classList.remove('border-transparent');
+                correctAnswers++;
+            } else {
+                selectedLabel.classList.add('bg-red-100', 'border-red-500');
+                selectedLabel.classList.remove('border-transparent');
+                
+                const correctInput = document.getElementById(`q${questionIndex}_opt${question.correctAnswer}`);
+                const correctLabel = document.getElementById(`label-q${questionIndex}_opt${question.correctAnswer}`);
+                correctLabel.classList.add('bg-green-100', 'border-green-500');
+                correctLabel.classList.remove('border-transparent');
+            }
+
+            totalAnswered++;
+            updateProgress();
+            updatePlantImage();
+        }
+
+        function updateProgress() {
+            const percentage = (totalAnswered / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('currentQuestion').textContent = totalAnswered;
+
+            if (totalAnswered === questions.length) {
+                setTimeout(() => {
+                    showResults();
+                }, 1000);
+            }
+        }
+
+        function updatePlantImage() {
+            const successRate = correctAnswers / totalAnswered;
+            let plantStage;
+
+            if (successRate >= 0.9) {
+                plantStage = plantStages[4];
+            } else if (successRate >= 0.7) {
+                plantStage = plantStages[3];
+            } else if (successRate >= 0.5) {
+                plantStage = plantStages[2];
+            } else if (successRate >= 0.3) {
+                plantStage = plantStages[1];
+            } else {
+                plantStage = plantStages[0];
+            }
+
+            const plantEmoji = document.getElementById('plantEmoji');
+            plantEmoji.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                plantEmoji.textContent = plantStage;
+                plantEmoji.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        function showResults() {
+            const percentage = Math.round((correctAnswers / questions.length) * 100);
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = 'Amazing! You\'re a master gardener! 🌺';
+            } else if (percentage >= 70) {
+                message = 'Great job! Your plant is thriving! 🌳';
+            } else if (percentage >= 50) {
+                message = 'Good effort! Keep learning! 🪴';
+            } else {
+                message = 'Keep practicing! Your plant needs more care! 🌱';
+            }
+
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+            resultDiv.innerHTML = `
+                <div class="bg-white rounded-3xl p-12 max-w-md text-center shadow-2xl">
+                    <div class="text-6xl mb-6">${document.getElementById('plantEmoji').textContent}</div>
+                    <h2 class="text-3xl font-bold text-[#2d3e28] mb-4">Quiz Complete!</h2>
+                    <p class="text-xl text-[#6b7565] mb-4">${message}</p>
+                    <p class="text-2xl font-semibold text-[#4a6741] mb-6">
+                        Score: ${correctAnswers}/${questions.length} (${percentage}%)
+                    </p>
+                    <button onclick="location.reload()" class="bg-[#4a6741] hover:bg-[#3e5637] text-white px-8 py-3 rounded-full font-semibold transition-all">
+                        Try Again
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(resultDiv);
+        }
+
+        window.addEventListener('DOMContentLoaded', loadQuestions);
+    </script>
+</body>
+</html>
