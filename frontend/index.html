@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GardenHub - Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-[#a8b89f] min-h-screen flex items-center justify-center p-6 font-sans">
+    <div class="bg-[#f5f3ed] rounded-3xl shadow-2xl w-full max-w-md p-8 relative overflow-hidden">
+        <div class="text-center mb-8 relative z-10">
+            <h1 class="text-4xl font-bold text-[#2d3e28] mb-2">Sign up</h1>
+            <p class="text-[#6b7565] text-sm leading-relaxed">
+                Log in to your account and keep growing. 🌱
+            </p>
+        </div>
+        <form class="space-y-5 relative z-10">
+            <div class="relative">
+                <label for="fname" class="sr-only">First name</label>
+                <input 
+                    type="name" 
+                    id="fname" 
+                    placeholder="First name"
+                    class="w-full bg-[#ebe9e0] text-[#2d3e28] placeholder-[#9a9c92] rounded-full px-6 py-4 pr-14 focus:outline-none focus:ring-2 focus:ring-[#6b8561] transition-all"
+                    required
+                >
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 bg-white rounded-full p-2.5 shadow-sm">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+            <div class="relative">
+                <label for="sname" class="sr-only">Second name</label>
+                <input 
+                    type="name" 
+                    id="sname" 
+                    placeholder="Second name"
+                    class="w-full bg-[#ebe9e0] text-[#2d3e28] placeholder-[#9a9c92] rounded-full px-6 py-4 pr-14 focus:outline-none focus:ring-2 focus:ring-[#6b8561] transition-all"
+                    required
+                >
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 bg-white rounded-full p-2.5 shadow-sm">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+            <div class="relative">
+                <label for="program" class="sr-only">Program</label>
+                <input 
+                    type="text" 
+                    id="program" 
+                    placeholder="Program"
+                    class="w-full bg-[#ebe9e0] text-[#2d3e28] placeholder-[#9a9c92] rounded-full px-6 py-4 pr-14 focus:outline-none focus:ring-2 focus:ring-[#6b8561] transition-all"
+                    required
+                >
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 bg-white rounded-full p-2.5 shadow-sm">
+                    <i class="fa-solid fa-globe"></i>
+                </div>
+            </div>
+            <button 
+                type="submit"
+                class="w-full bg-[#4a6741] hover:bg-[#3e5637] text-white font-semibold rounded-full py-4 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+            >
+                Register
+            </button>
+            <p class="text-center text-sm text-[#6b7565] pt-4">
+                Already have account? 
+                <a href="#" class="text-[#4a6741] hover:text-[#3e5637] font-semibold transition-colors">Log in</a>
+            </p>
+        </form>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
