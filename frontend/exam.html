@@ -26,6 +26,9 @@
                 <p class="text-center text-sm text-[#6b7565] mt-3">
                     <span id="currentQuestion">0</span> of <span id="totalQuestions">10</span> answered
                 </p>
+                <p class="text-center text-xs text-[#4a6741] mt-2 font-semibold">
+                    Correct: <span id="correctCount">0</span>
+                </p>
             </div>
         </div>
 
@@ -126,18 +129,17 @@
                 label.classList.remove('cursor-pointer', 'hover:bg-[#f9f8f5]', 'hover:border-[#c3dea9]');
             });
 
-            const selectedInput = document.getElementById(`q${questionIndex}_opt${selectedOption}`);
             const selectedLabel = document.getElementById(`label-q${questionIndex}_opt${selectedOption}`);
             
             if (isCorrect) {
                 selectedLabel.classList.add('bg-green-100', 'border-green-500');
                 selectedLabel.classList.remove('border-transparent');
                 correctAnswers++;
+                document.getElementById('correctCount').textContent = correctAnswers;
             } else {
                 selectedLabel.classList.add('bg-red-100', 'border-red-500');
                 selectedLabel.classList.remove('border-transparent');
                 
-                const correctInput = document.getElementById(`q${questionIndex}_opt${question.correctAnswer}`);
                 const correctLabel = document.getElementById(`label-q${questionIndex}_opt${question.correctAnswer}`);
                 correctLabel.classList.add('bg-green-100', 'border-green-500');
                 correctLabel.classList.remove('border-transparent');
@@ -161,19 +163,19 @@
         }
 
         function updatePlantImage() {
-            const successRate = correctAnswers / totalAnswered;
+            const successRate = correctAnswers / questions.length;
             let plantStage;
 
-            if (successRate >= 0.9) {
-                plantStage = plantStages[4];
-            } else if (successRate >= 0.7) {
-                plantStage = plantStages[3];
-            } else if (successRate >= 0.5) {
-                plantStage = plantStages[2];
-            } else if (successRate >= 0.3) {
-                plantStage = plantStages[1];
+            if (successRate >= 0.8) {
+                plantStage = plantStages[4]; // 🌺 - 80%+ правильних
+            } else if (successRate >= 0.6) {
+                plantStage = plantStages[3]; // 🌳 - 60%+ правильних
+            } else if (successRate >= 0.4) {
+                plantStage = plantStages[2]; // 🪴 - 40%+ правильних
+            } else if (successRate >= 0.2) {
+                plantStage = plantStages[1]; // 🌿 - 20%+ правильних
             } else {
-                plantStage = plantStages[0];
+                plantStage = plantStages[0]; // 🌱 - менше 20% правильних
             }
 
             const plantEmoji = document.getElementById('plantEmoji');

@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "FirstName": "Ihor",
+    "SecondName": "Butenko",
+    "Program": "AI29",
+    "RegisteredAt": "2025-12-06 17:39:49"
+  },
+  {
+    "id": 2,
+    "FirstName": "Ihor",
+    "SecondName": "Butenko",
+    "Program": "AI",
+    "RegisteredAt": "2025-12-06 18:23:49"
+  }
+]

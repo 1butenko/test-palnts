@@ -15,11 +15,11 @@
                 Log in to your account and keep growing. 🌱
             </p>
         </div>
-        <form class="space-y-5 relative z-10">
+        <form id="registrationForm" class="space-y-5 relative z-10">
             <div class="relative">
                 <label for="fname" class="sr-only">First name</label>
                 <input 
-                    type="name" 
+                    type="text" 
                     id="fname" 
                     placeholder="First name"
                     class="w-full bg-[#ebe9e0] text-[#2d3e28] placeholder-[#9a9c92] rounded-full px-6 py-4 pr-14 focus:outline-none focus:ring-2 focus:ring-[#6b8561] transition-all"
@@ -32,7 +32,7 @@
             <div class="relative">
                 <label for="sname" class="sr-only">Second name</label>
                 <input 
-                    type="name" 
+                    type="text" 
                     id="sname" 
                     placeholder="Second name"
                     class="w-full bg-[#ebe9e0] text-[#2d3e28] placeholder-[#9a9c92] rounded-full px-6 py-4 pr-14 focus:outline-none focus:ring-2 focus:ring-[#6b8561] transition-all"
@@ -57,6 +57,7 @@
             </div>
             <button 
                 type="submit"
+                id="submitBtn"
                 class="w-full bg-[#4a6741] hover:bg-[#3e5637] text-white font-semibold rounded-full py-4 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
             >
                 Register
